@@ -1,0 +1,6 @@
+# Virtual Environment
+.churn
+churn/
+# Python cache files
+__pycache__/
+*.pyc

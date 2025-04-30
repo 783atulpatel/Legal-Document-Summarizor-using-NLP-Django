@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Predict Churn - Churn Prediction App{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <h1 class="display-5"><i class="fas fa-calculator text-primary me-2"></i>Customer Churn Prediction</h1>
+        <p class="lead">Enter customer details to predict the likelihood of churn</p>
+    </div>
+</div>
+
+{% if error %}
+<div class="alert alert-danger" role="alert">
+    <i class="fas fa-exclamation-triangle me-2"></i>{{ error }}
+</div>
+{% endif %}
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form method="POST" action="/predict">
+            <div class="row">
+                <!-- Categorical Features -->
+                {% for feature in categorical_features %}
+                {% if feature == 'platform' %}
+                <div class="col-md-6 mb-3">
+                    <label for="{{ feature }}" class="form-label">{{ feature|replace('_', ' ')|title }}</label>
+                    <select class="form-select" id="{{ feature }}" name="{{ feature }}" required>
+                        <option value="Swiggy" selected>Swiggy</option>
+                        <option value="Zomato">Zomato</option>
+                        <option value="Zepto">Zepto</option>
+                        <option value="Blinkit">Blinkit</option>
+                    </select>
+                </div>
+                {% elif feature == 'gender' %}
+                <div class="col-md-6 mb-3">
+                    <label for="{{ feature }}" class="form-label">{{ feature|replace('_', ' ')|title }}</label>
+                    <select class="form-select" id="{{ feature }}" name="{{ feature }}" required>
+                        <option value="Male" selected>Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                {% elif feature == 'city' %}
+                <div class="col-md-6 mb-3">
+                    <label for="{{ feature }}" class="form-label">{{ feature|replace('_', ' ')|title }}</label>
+                    <select class="form-select" id="{{ feature }}" name="{{ feature }}" required>
+                        <option value="Bangalore" selected>Bangalore</option>
+                        <option value="Mumbai">Mumbai</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Hyderabad">Hyderabad</option>
+                        <option value="Chennai">Chennai</option>
+                        <option value="Kolkata">Kolkata</option>
+                        <option value="Pune">Pune</option>
+                        <option value="Ahmedabad">Ahmedabad</option>
+                    </select>
+                </div>
+                {% elif feature == 'payment_method' %}
+                <div class="col-md-6 mb-3">
+                    <label for="{{ feature }}" class="form-label">{{ feature|replace('_', ' ')|title }}</label>
+                    <select class="form-select" id="{{ feature }}" name="{{ feature }}" required>
+                        <option value="UPI" selected>UPI</option>
+                        <option value="Credit Card">Credit Card</option>
+                        <option value="Debit Card">Debit Card</option>
+                        <option value="Wallet">Wallet</option>
+                        <option value="Cash on Delivery">Cash on Delivery</option>
+                    </select>
+                </div>
+                {% else %}
+                <div class="col-md-6 mb-3">
+                    <label for="{{ feature }}" class="form-label">{{ feature|replace('_', ' ')|title }}</label>
+                    <input type="text" class="form-control" id="{{ feature }}" name="{{ feature }}" required>
+                </div>
+                {% endif %}
+                {% endfor %}
+
+                <!-- Numerical Features -->
+                {% for feature in numerical_features %}
+                {% if feature == 'age' %}
+                <div class="col-md-6 mb-3">
+                    <label for="{{ feature }}" class="form-label">{{ feature|replace('_', ' ')|title }}</label>
+                    <input type="number" class="form-control" id="{{ feature }}" name="{{ feature }}" min="18" max="80" value="30" required>
+                </div>
+                {% elif feature == 'tenure_months' %}
+                <div class="col-md-6 mb-3">
+                    <label for="{{ feature }}" class="form-label">{{ feature|replace('_', ' ')|title }}</label>
+                    <input type="number" class="form-control" id="{{ feature }}" name="{{ feature }}" min="1" max="60" value="12" required>
+                </div>
+                {% elif feature == 'order_frequency' %}
+                <div class="col-md-6 mb-3">
+                    <label for="{{ feature }}" class="form-label">{{ feature|replace('_', ' ')|title }} (per month)</label>
+                    <input type="number" class="form-control" id="{{ feature }}" name="{{ feature }}" min="0.1" max="30" step="0.1" value="5" required>
+                </div>
+                {% elif feature == 'avg_order_value' %}
+                <div class="col-md-6 mb-3">
+                    <label for="{{ feature }}" class="form-label">{{ feature|replace('_', ' ')|title }} (INR)</label>
+                    <input type="number" class="form-control" id="{{ feature }}" name="{{ feature }}" min="100" max="2000" value="350" required>
+                </div>
+                {% elif feature == 'discount_usage_rate' or feature == 'delivery_issues_rate' %}
+                <div class="col-md-6 mb-3">
+                    <label for="{{ feature }}" class="form-label">{{ feature|replace('_', ' ')|title }} (0-1)</label>
+                    <input type="number" class="form-control" id="{{ feature }}" name="{{ feature }}" min="0" max="1" step="0.01" value="0.1" required>
+                </div>
+                {% elif feature == 'support_interactions' %}
+                <div class="col-md-6 mb-3">
+                    <label for="{{ feature }}" class="form-label">{{ feature|replace('_', ' ')|title }} (per month)</label>
+                    <input type="number" class="form-control" id="{{ feature }}" name="{{ feature }}" min="0" max="5" step="0.1" value="0.5" required>
+                </div>
+                {% elif feature == 'app_usage_frequency' %}
+                <div class="col-md-6 mb-3">
+                    <label for="{{ feature }}" class="form-label">{{ feature|replace('_', ' ')|title }} (days per week)</label>
+                    <input type="number" class="form-control" id="{{ feature }}" name="{{ feature }}" min="0" max="7" step="0.1" value="3" required>
+                </div>
+                {% elif feature == 'subscription_status' %}
+                <div class="col-md-6 mb-3">
+                    <label for="{{ feature }}" class="form-label">{{ feature|replace('_', ' ')|title }}</label>
+                    <select class="form-select" id="{{ feature }}" name="{{ feature }}" required>
+                        <option value="1">Subscribed</option>
+                        <option value="0" selected>Not Subscribed</option>
+                    </select>
+                </div>
+                {% elif feature == 'days_since_last_order' %}
+                <div class="col-md-6 mb-3">
+                    <label for="{{ feature }}" class="form-label">{{ feature|replace('_', ' ')|title }}</label>
+                    <input type="number" class="form-control" id="{{ feature }}" name="{{ feature }}" min="0" max="180" value="7" required>
+                </div>
+                {% elif feature == 'review_score' %}
+                <div class="col-md-6 mb-3">
+                    <label for="{{ feature }}" class="form-label">{{ feature|replace('_', ' ')|title }} (1-5)</label>
+                    <input type="number" class="form-control" id="{{ feature }}" name="{{ feature }}" min="1" max="5" step="0.1" value="4" required>
+                </div>
+                {% elif feature == 'referrals' %}
+                <div class="col-md-6 mb-3">
+                    <label for="{{ feature }}" class="form-label">{{ feature|replace('_', ' ')|title }}</label>
+                    <input type="number" class="form-control" id="{{ feature }}" name="{{ feature }}" min="0" max="10" value="1" required>
+                </div>
+                {% else %}
+                <div class="col-md-6 mb-3">
+                    <label for="{{ feature }}" class="form-label">{{ feature|replace('_', ' ')|title }}</label>
+                    <input type="number" class="form-control" id="{{ feature }}" name="{{ feature }}" value="0" required>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+
+            <div class="d-grid gap-2 col-md-6 mx-auto mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-calculator me-2"></i>Predict Churn
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

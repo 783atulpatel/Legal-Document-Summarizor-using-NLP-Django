@@ -1,0 +1,102 @@
+/* Dashboard specific styles */
+
+.dashboard-card {
+    transition: all 0.3s ease;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.metric-card {
+    padding: 20px;
+    text-align: center;
+    border-radius: 15px;
+}
+
+.metric-card .display-4 {
+    font-weight: 700;
+    margin-top: 10px;
+}
+
+.metric-card .card-title {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+}
+
+.feature-importance-item {
+    transition: all 0.3s ease;
+}
+
+.feature-importance-item:hover {
+    background-color: #f8f9fa;
+}
+
+.platform-logo {
+    height: 100px;
+    width: 100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background-color: #f8f9fa;
+    margin-bottom: 15px;
+}
+
+.platform-logo i {
+    font-size: 3rem;
+}
+
+.strategy-card {
+    height: 100%;
+    transition: all 0.3s ease;
+}
+
+.strategy-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.strategy-card .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+/* Chart container styles */
+.chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+}
+
+/* Animation for dashboard elements */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.dashboard-card {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.dashboard-card:nth-child(1) { animation-delay: 0.1s; }
+.dashboard-card:nth-child(2) { animation-delay: 0.2s; }
+.dashboard-card:nth-child(3) { animation-delay: 0.3s; }
+.dashboard-card:nth-child(4) { animation-delay: 0.4s; }
+.dashboard-card:nth-child(5) { animation-delay: 0.5s; }
+.dashboard-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .metric-card .display-4 {
+        font-size: 2rem;
+    }
+    
+    .chart-container {
+        height: 250px;
+    }
+}

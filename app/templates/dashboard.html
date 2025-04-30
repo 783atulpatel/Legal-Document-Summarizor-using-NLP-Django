@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Churn Prediction App{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 mb-4">
+        <h1 class="display-5"><i class="fas fa-tachometer-alt text-primary me-2"></i>Churn Analytics Dashboard</h1>
+        <p class="lead">Overview of customer churn metrics and insights</p>
+    </div>
+    <div class="col-md-2 mb-4 d-flex align-items-center justify-content-end">
+        <a href="/export-data" class="btn btn-outline-primary">
+            <i class="fas fa-download me-2"></i>Export Data
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Key Metrics Cards -->
+    <div class="col-md-4 mb-4">
+        <div class="card bg-primary text-white shadow-sm h-100 dashboard-card">
+            <div class="card-body text-center metric-card">
+                <i class="fas fa-users fa-2x"></i>
+                <h5 class="card-title">Total Customers</h5>
+                <p class="display-4 mb-0">{{ total_customers }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card bg-danger text-white shadow-sm h-100 dashboard-card">
+            <div class="card-body text-center metric-card">
+                <i class="fas fa-user-minus fa-2x"></i>
+                <h5 class="card-title">Churn Rate</h5>
+                <p class="display-4 mb-0">{{ "%.1f"|format(churn_rate) }}%</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card bg-success text-white shadow-sm h-100 dashboard-card">
+            <div class="card-body text-center metric-card">
+                <i class="fas fa-clock fa-2x"></i>
+                <h5 class="card-title">Avg. Customer Tenure</h5>
+                <p class="display-4 mb-0">{{ "%.1f"|format(avg_tenure) }} months</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Feature Importance Chart -->
+    <div class="col-md-8 mb-4">
+        <div class="card shadow-sm h-100 dashboard-card">
+            <div class="card-body">
+                <h2 class="card-title mb-4"><i class="fas fa-chart-bar text-primary me-2"></i>Feature Importance</h2>
+                <div class="chart-container">
+                    <canvas id="featureImportanceChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Churn Factors -->
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm h-100 dashboard-card">
+            <div class="card-body">
+                <h2 class="card-title mb-4"><i class="fas fa-exclamation-triangle text-primary me-2"></i>Top Churn Factors</h2>
+                <ol class="list-group list-group-numbered">
+                    {% for feature in feature_importance[:5] %}
+                    <li class="list-group-item d-flex justify-content-between align-items-start feature-importance-item">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">{{ feature.feature|replace('_', ' ')|title }}</div>
+                            Impact on churn prediction
+                        </div>
+                        <span class="badge bg-primary rounded-pill">{{ "%.2f"|format(feature.importance) }}</span>
+                    </li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Platform Comparison -->
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100 dashboard-card">
+            <div class="card-body">
+                <h2 class="card-title mb-4"><i class="fas fa-building text-primary me-2"></i>Platform Comparison</h2>
+                <div class="chart-container">
+                    <canvas id="platformComparisonChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Churn by Tenure -->
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100 dashboard-card">
+            <div class="card-body">
+                <h2 class="card-title mb-4"><i class="fas fa-history text-primary me-2"></i>Churn by Tenure</h2>
+                <div class="chart-container">
+                    <canvas id="churnByTenureChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Retention Strategies -->
+    <div class="col-md-12 mb-4">
+        <div class="card shadow-sm dashboard-card">
+            <div class="card-body">
+                <h2 class="card-title mb-4"><i class="fas fa-life-ring text-primary me-2"></i>Recommended Retention Strategies</h2>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 strategy-card">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-gift text-primary me-2"></i>Personalized Offers</h5>
+                                <p class="card-text">Provide targeted discounts based on customer preferences and order history to increase engagement.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 strategy-card">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-star text-primary me-2"></i>Loyalty Programs</h5>
+                                <p class="card-text">Implement tiered loyalty programs with increasing benefits to encourage continued usage.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 strategy-card">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-truck text-primary me-2"></i>Delivery Experience</h5>
+                                <p class="card-text">Improve delivery times and accuracy to reduce issues that lead to customer dissatisfaction.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 strategy-card">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-comments text-primary me-2"></i>Proactive Support</h5>
+                                <p class="card-text">Reach out to customers after delivery issues to resolve problems before they lead to churn.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 strategy-card">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-users text-primary me-2"></i>Referral Incentives</h5>
+                                <p class="card-text">Encourage customers to refer friends with dual-sided rewards to increase loyalty.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 strategy-card">
+                            <div class="card-body">
+                                <h5 class="card-title"><i class="fas fa-bell text-primary me-2"></i>Re-engagement Campaigns</h5>
+                                <p class="card-text">Send personalized messages to inactive customers with compelling offers to bring them back.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Feature Importance Chart
+        const featureImportanceCtx = document.getElementById('featureImportanceChart').getContext('2d');
+        const featureImportanceChart = new Chart(featureImportanceCtx, {
+            type: 'bar',
+            data: {
+                labels: [
+                    {% for feature in feature_importance[:10] %}
+                    '{{ feature.feature|replace('_', ' ')|title }}',
+                    {% endfor %}
+                ],
+                datasets: [{
+                    label: 'Feature Importance',
+                    data: [
+                        {% for feature in feature_importance[:10] %}
+                        {{ feature.importance }},
+                        {% endfor %}
+                    ],
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Top 10 Features by Importance'
+                    }
+                }
+            }
+        });
+
+        // Platform Comparison Chart
+        const platformComparisonCtx = document.getElementById('platformComparisonChart').getContext('2d');
+        const platformComparisonChart = new Chart(platformComparisonCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Swiggy', 'Zomato', 'Zepto', 'Blinkit'],
+                datasets: [{
+                    label: 'Churn Rate (%)',
+                    data: [18.5, 17.2, 22.1, 20.8],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.7)',
+                        'rgba(255, 159, 64, 0.7)',
+                        'rgba(75, 192, 192, 0.7)',
+                        'rgba(153, 102, 255, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Churn Rate (%)'
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Churn Rate by Platform'
+                    }
+                }
+            }
+        });
+
+        // Churn by Tenure Chart
+        const churnByTenureCtx = document.getElementById('churnByTenureChart').getContext('2d');
+        const churnByTenureChart = new Chart(churnByTenureCtx, {
+            type: 'line',
+            data: {
+                labels: ['0-3', '4-6', '7-12', '13-18', '19-24', '25+'],
+                datasets: [{
+                    label: 'Churn Rate (%)',
+                    data: [32.5, 24.8, 18.2, 12.5, 8.7, 5.3],
+                    fill: false,
+                    backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Churn Rate (%)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Tenure (months)'
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Churn Rate by Customer Tenure'
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction Result - Churn Prediction App{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <h1 class="display-5"><i class="fas fa-chart-pie text-primary me-2"></i>Churn Prediction Result</h1>
+        <p class="lead">Analysis of customer churn probability</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body text-center">
+                <h2 class="card-title mb-4">Prediction</h2>
+                
+                {% if result.churn_prediction == 1 %}
+                <div class="alert alert-danger p-4 mb-4">
+                    <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
+                    <h3>High Risk of Churn</h3>
+                    <p class="lead mb-0">This customer is likely to churn</p>
+                </div>
+                {% else %}
+                <div class="alert alert-success p-4 mb-4">
+                    <i class="fas fa-check-circle fa-3x mb-3"></i>
+                    <h3>Low Risk of Churn</h3>
+                    <p class="lead mb-0">This customer is likely to stay</p>
+                </div>
+                {% endif %}
+                
+                <div class="churn-probability mb-4">
+                    <h4>Churn Probability</h4>
+                    <div class="progress" style="height: 30px;">
+                        <div class="progress-bar {% if result.churn_probability > 0.5 %}bg-danger{% else %}bg-success{% endif %}" 
+                             role="progressbar" 
+                             style="width: {{ result.churn_probability * 100 }}%;" 
+                             aria-valuenow="{{ result.churn_probability * 100 }}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100">
+                            {{ "%.1f"|format(result.churn_probability * 100) }}%
+                        </div>
+                    </div>
+                </div>
+                
+                <a href="/predict" class="btn btn-primary">
+                    <i class="fas fa-redo me-1"></i> Make Another Prediction
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6 mb-4">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h2 class="card-title mb-4">Retention Recommendations</h2>
+                
+                {% if result.churn_prediction == 1 %}
+                <div class="recommendations">
+                    <ul class="list-group list-group-flush">
+                        {% if result.features.days_since_last_order > 30 %}
+                        <li class="list-group-item">
+                            <i class="fas fa-envelope text-primary me-2"></i>
+                            <strong>Re-engagement Campaign:</strong> Send a personalized offer to encourage the customer to place an order
+                        </li>
+                        {% endif %}
+                        
+                        {% if result.features.delivery_issues_rate > 0.2 %}
+                        <li class="list-group-item">
+                            <i class="fas fa-truck text-primary me-2"></i>
+                            <strong>Delivery Experience:</strong> Address delivery issues and offer priority delivery
+                        </li>
+                        {% endif %}
+                        
+                        {% if result.features.support_interactions > 1 %}
+                        <li class="list-group-item">
+                            <i class="fas fa-headset text-primary me-2"></i>
+                            <strong>Customer Support:</strong> Provide dedicated support and follow up on previous issues
+                        </li>
+                        {% endif %}
+                        
+                        {% if result.features.subscription_status == 0 %}
+                        <li class="list-group-item">
+                            <i class="fas fa-star text-primary me-2"></i>
+                            <strong>Subscription Offer:</strong> Provide a discounted subscription plan with exclusive benefits
+                        </li>
+                        {% endif %}
+                        
+                        {% if result.features.discount_usage_rate > 0.5 %}
+                        <li class="list-group-item">
+                            <i class="fas fa-tags text-primary me-2"></i>
+                            <strong>Personalized Discounts:</strong> Offer discounts on frequently ordered items
+                        </li>
+                        {% endif %}
+                        
+                        <li class="list-group-item">
+                            <i class="fas fa-phone text-primary me-2"></i>
+                            <strong>Personal Outreach:</strong> Consider a direct call from customer success team
+                        </li>
+                    </ul>
+                </div>
+                {% else %}
+                <div class="recommendations">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <i class="fas fa-thumbs-up text-primary me-2"></i>
+                            <strong>Loyalty Program:</strong> Enroll the customer in a loyalty program to increase retention
+                        </li>
+                        
+                        {% if result.features.referrals < 2 %}
+                        <li class="list-group-item">
+                            <i class="fas fa-users text-primary me-2"></i>
+                            <strong>Referral Incentives:</strong> Encourage the customer to refer friends with rewards
+                        </li>
+                        {% endif %}
+                        
+                        {% if result.features.order_frequency < 5 %}
+                        <li class="list-group-item">
+                            <i class="fas fa-calendar-alt text-primary me-2"></i>
+                            <strong>Increase Frequency:</strong> Send timely reminders and offers to increase order frequency
+                        </li>
+                        {% endif %}
+                        
+                        {% if result.features.subscription_status == 0 %}
+                        <li class="list-group-item">
+                            <i class="fas fa-star text-primary me-2"></i>
+                            <strong>Subscription Offer:</strong> Suggest a subscription plan with benefits
+                        </li>
+                        {% endif %}
+                        
+                        <li class="list-group-item">
+                            <i class="fas fa-heart text-primary me-2"></i>
+                            <strong>Appreciation:</strong> Send a thank you note or small reward for customer loyalty
+                        </li>
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h2 class="card-title mb-4">Customer Profile</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <table class="table">
+                            <tbody>
+                                {% for key, value in result.features.items() %}
+                                {% if loop.index <= result.features|length // 2 %}
+                                <tr>
+                                    <th scope="row">{{ key|replace('_', ' ')|title }}</th>
+                                    <td>{{ value }}</td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table">
+                            <tbody>
+                                {% for key, value in result.features.items() %}
+                                {% if loop.index > result.features|length // 2 %}
+                                <tr>
+                                    <th scope="row">{{ key|replace('_', ' ')|title }}</th>
+                                    <td>{{ value }}</td>
+                                </tr>
+                                {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

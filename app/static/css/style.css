@@ -1,0 +1,121 @@
+/* Custom styles for Churn Prediction App */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.card {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.platform-logo {
+    border-radius: 10px;
+    background-color: #f8f9fa;
+    transition: all 0.3s ease;
+}
+
+.platform-logo:hover {
+    background-color: #e9ecef;
+    transform: scale(1.05);
+}
+
+.progress {
+    border-radius: 10px;
+    height: 25px;
+}
+
+.progress-bar {
+    font-weight: bold;
+}
+
+.list-group-item {
+    border-left: none;
+    border-right: none;
+}
+
+.alert {
+    border-radius: 10px;
+}
+
+.btn {
+    border-radius: 5px;
+    padding: 8px 20px;
+}
+
+.btn-primary {
+    background-color: #4361ee;
+    border-color: #4361ee;
+}
+
+.btn-primary:hover {
+    background-color: #3a56d4;
+    border-color: #3a56d4;
+}
+
+.bg-primary {
+    background-color: #4361ee !important;
+}
+
+.text-primary {
+    color: #4361ee !important;
+}
+
+.bg-danger {
+    background-color: #ef476f !important;
+}
+
+.bg-success {
+    background-color: #06d6a0 !important;
+}
+
+footer {
+    margin-top: 50px;
+    padding: 20px 0;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+}
+
+/* Form styling */
+.form-label {
+    font-weight: 600;
+}
+
+.form-control, .form-select {
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid #ced4da;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #4361ee;
+    box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+}
+
+/* Dashboard specific styles */
+.display-4 {
+    font-weight: 700;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 20px;
+    }
+    
+    .display-4 {
+        font-size: 2.5rem;
+    }
+}

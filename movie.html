@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Movie Mania</title>
+  <style>
+    /* Global Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Poppins', Arial, sans-serif; /* Enhanced font */
+      background-color: #0e0e0e;
+      color: #fff;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Navbar */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: #1a1a1a;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    nav .logo {
+      font-size: 1.8rem; /* Enhanced font size */
+      font-weight: bold;
+      color: #facc15;
+    }
+
+    nav ul {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    nav ul li {
+      list-style: none;
+    }
+
+    nav ul li a:hover {
+      color: #facc15;
+    }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 70vh; /* Adjusted height for better visuals */
+      overflow: hidden;
+    }
+
+    .carousel {
+      display: flex;
+      width: 300%;
+      animation: slide 15s infinite;
+    }
+
+    .carousel img {
+      width: 100%;
+      height: 100%; /* Ensures the image fills the hero section */
+      object-fit: cover; /* Ensures proper image fitting */
+    }
+
+    @keyframes slide {
+      0% { transform: translateX(0); }
+      33% { transform: translateX(-100%); }
+      66% { transform: translateX(-200%); }
+      100% { transform: translateX(0); }
+    }
+
+    .hero-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+      display: flex;
+      align-items: flex-end;
+      padding: 2rem;
+    }
+
+    .hero-text {
+      font-size: 2.5rem; /* Enhanced font size */
+      font-weight: bold; /* Added boldness */
+      color: #facc15;
+    }
+
+    /* Movie Cards */
+    .section-title {
+      text-align: center;
+      font-size: 2.5rem; /* Enhanced font size */
+      margin: 2rem 0;
+      color: #facc15;
+    }
+
+    .movie-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      padding: 0 2rem 3rem;
+    }
+
+    .card {
+      background-color: #1f1f1f;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.05);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+    }
+
+    .card img {
+      width: 100%;
+      height: 320px; /* Ensures consistent card image height */
+      object-fit: cover; /* Ensures proper image fitting */
+    }
+
+    .card-content {
+      padding: 1rem;
+    }
+
+    .card-title {
+      font-size: 1.4rem; /* Enhanced font size */
+      font-weight: bold; /* Added boldness */
+      margin-bottom: 0.5rem;
+    }
+
+    .card-description {
+      font-size: 1rem; /* Enhanced font size */
+      color: #cfcfcf;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #1a1a1a;
+      padding: 2rem;
+      text-align: center;
+      color: #aaa;
+      font-size: 1rem; /* Enhanced font size */
+    }
+
+    @media (max-width: 768px) {
+      nav ul {
+        flex-direction: column;
+        display: none;
+      }
+
+      nav.active ul {
+        display: flex;
+      }
+
+      .menu-toggle {
+        display: block;
+        cursor: pointer;
+      }
+    }
+
+    .menu-toggle {
+      display: none;
+      font-size: 1.5rem;
+      color: #facc15;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav>
+    <div class="logo">🎬 MovieMania</div>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <ul id="nav-links">
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Latest</a></li>
+      <li><a href="#">Genres</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Section with Carousel -->
+  <section class="hero">
+    <div class="carousel">
+      <img src="https://img.freepik.com/free-vector/cool-superhero-movie-poster_742173-6440.jpg?uid=R197227742&ga=GA1.1.1065195311.1745390676&semt=ais_hybrid&w=740" alt="Slide 1" />
+      <img src="https://img.freepik.com/free-psd/womens-day-instagram-post-design-template_505751-3451.jpg?uid=R197227742&ga=GA1.1.1065195311.1745390676&semt=ais_hybrid&w=740" alt="Slide 2" />
+      <img src="https://img.freepik.com/free-photo/network-connection-graphic-overlay-banner-background_53876-121445.jpg?uid=R197227742&ga=GA1.1.1065195311.1745390676&semt=ais_hybrid&w=740" alt="Slide 3" />
+    </div>
+    <div class="hero-overlay">
+      <div class="hero-text">Stream the Latest Blockbusters Now</div>
+    </div>
+  </section>
+
+  <!-- Latest Movies Section -->
+  <h2 class="section-title">Latest Releases</h2>
+  <div class="movie-cards">
+    <div class="card">
+      <img src="https://img.freepik.com/free-psd/camera-film-inspired-poster_23-2148876281.jpg?uid=R197227742&ga=GA1.1.1065195311.1745390676&semt=ais_hybrid&w=740" alt="Movie 1" />
+      <div class="card-content">
+        <div class="card-title">Action Hero</div>
+        <p class="card-description">A thrilling adventure of a lone warrior saving the world.</p>
+      </div>
+    </div>
+    <div class="card">
+      <img src="https://img.freepik.com/premium-psd/wild-western-night-flyer-template_205923-127.jpg?uid=R197227742&ga=GA1.1.1065195311.1745390676&semt=ais_hybrid&w=740" alt="Movie 2" />
+      <div class="card-content">
+        <div class="card-title">Mystery Lane</div>
+        <p class="card-description">A detective unravels secrets in a shadowy city.</p>
+      </div>
+    </div>
+    <div class="card">
+      <img src="https://img.freepik.com/premium-photo/christmas-promo-banner_973275-19318.jpg?uid=R197227742&ga=GA1.1.1065195311.1745390676&semt=ais_hybrid&w=740" alt="Movie 3" />
+      <div class="card-content">
+        <div class="card-title">Love in Times</div>
+        <p class="card-description">Two souls find each other in a digital world.</p>
+      </div>
+    </div>
+    <div class="card">
+      <img src="https://img.freepik.com/free-vector/theater-season-announcement-advertisement-stylish-realistic-composition-with-comedy-tragedy-masks-paper-ink-feather-pen_1284-26857.jpg?uid=R197227742&ga=GA1.1.1065195311.1745390676&semt=ais_hybrid&w=740" alt="Movie 4" />
+      <div class="card-content">
+        <div class="card-title">Laugh Riot</div>
+        <p class="card-description">A hilarious journey of an awkward guy in love.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    &copy; 2025 MovieMania. All rights reserved.
+  </footer>
+
+  <!-- JavaScript for menu toggle -->
+  <script>
+    function toggleMenu() {
+      document.querySelector('nav').classList.toggle('active');
+    }
+  </script>
+</body>
+</html>
